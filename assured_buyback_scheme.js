@@ -1,35 +1,29 @@
-// Given Data
-const exShowroomPrice = 3569000;
-const tcs = exShowroomPrice * 0.01;
-const registrationCharges = 548415;
-const insurance = 197987;
-const fastTag = 600;
-const docsAndDelivery = 31500;
-const extendedWarranty = 52000;
-const onRoadPrice = 4435192;
-const vehicleDiscount = 100000;
-const insuranceDiscount = 92000;
-const finalOnRoadPrice = 4243192;
-const loanPercentage = 0.75;
-const processingFees = 6400;
-const stampDuty = 6364;
-const emiAmount = 57626;
-const emiCount = 59;
-const balloonPercentage = 0.25;
-const buybackValue = 2000000;
+function calculateBalloonEMI(principal, annualInterestRate, loanTermMonths, balloonPayment) {
+   
+    let monthlyInterestRate = annualInterestRate / 12 / 100;
+    
 
-const loanAmount = finalOnRoadPrice * loanPercentage;
+    let totalPayments = loanTermMonths;
+    
+   
+    let amortizingPrincipal = principal - balloonPayment;
+    let EMI = (amortizingPrincipal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalPayments)) / 
+              (Math.pow(1 + monthlyInterestRate, totalPayments) - 1);
+    
+    return {
+        EMI: EMI,
+        balloonPayment: balloonPayment,
+        totalPayment: (EMI * (totalPayments - 1)) + balloonPayment 
+    };
+}
 
-const balloonEMI = loanAmount * balloonPercentage;
 
-const marginMoney = finalOnRoadPrice - loanAmount;
-const totalDownPayment = marginMoney + processingFees + stampDuty;
+let principal = 3182000;
+let annualInterestRate = 10; 
+let loanTermMonths = 60; 
+let balloonPayment = 795500; 
 
-const differenceAfterBuyback = balloonEMI - buybackValue;
-
-console.log("Loan Amount: ₹" + loanAmount.toFixed(2));
-console.log("Balloon EMI: ₹" + balloonEMI.toFixed(2));
-console.log("Total Down Payment: ₹" + totalDownPayment.toFixed(2));
-console.log("Difference after Buyback Value: ₹" + differenceAfterBuyback.toFixed(2));
-
-console.log("Regular EMI (₹" + emiAmount + ") for " + emiCount + " months.");
+let result = calculateBalloonEMI(principal, annualInterestRate, loanTermMonths, balloonPayment);
+console.log(`Monthly EMI for the first 59 months: ${result.EMI.toFixed(2)}`);
+console.log(`Balloon Payment in the 60th month: ${result.balloonPayment.toFixed(2)}`);
+console.log(`Total Payment over the loan term: ${result.totalPayment.toFixed(2)}`);
